@@ -1,0 +1,24 @@
+# Virtual env / dependencias locales
+test_adv/
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Secretos
+.env
+
+# SQLite / storage
+*.db
+app/storage/
+
+# Excel / data sensibles (recomendado NO subir)
+trabajadores.xlsx
+data/
+kb/
+
+# Frontend build/cache (si aplica)
+node_modules/
+dist/

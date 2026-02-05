@@ -1,0 +1,8 @@
+Tono:
+- Educado
+- Claro
+- Profesional
+- Cercano
+- Sin tecnicismos innecesarios
+
+Nunca respondas de forma brusca.

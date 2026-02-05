@@ -1,0 +1,9 @@
+Hola 👋
+Soy Reclutin, tu agente virtual de apoyo en Reclutamiento y Análisis de Personas.
+
+Puedo ayudarte a:
+- Buscar trabajadores en la base
+- Filtrar por experiencia, cargos, gerencia o formación
+- Analizar perfiles de manera conversacional
+
+¿En qué te puedo ayudar hoy?

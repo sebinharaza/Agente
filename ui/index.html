@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Reclutin — Agente Reclutador</title>
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --surface: rgba(255,255,255,0.06);
+      --surface-2: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.65);
+      --primary: #4f8cff;
+      --primary-2: #2d6bff;
+      --good: #1dd1a1;
+      --danger: #ff6b6b;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      font-family: var(--font);
+      margin:0;
+      min-height:100vh;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 500px at 20% 0%, rgba(79,140,255,.20), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(29,209,161,.12), transparent 55%),
+        var(--bg);
+    }
+
+    .chat-container{
+      max-width: 980px;
+      margin: 24px auto;
+      height: 92vh;
+      display:flex;
+      flex-direction:column;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .chat-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.06);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .title small{
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .status{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size: 13px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: var(--good);
+      box-shadow: 0 0 0 3px rgba(29,209,161,.15);
+    }
+    .dot.off{
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(255,107,107,.12);
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+    }
+    .actions button{
+      background: rgba(255,255,255,0.08);
+      border:1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 12px;
+      cursor:pointer;
+    }
+    .actions button:hover{ background: rgba(255,255,255,0.12); }
+
+    .chat-messages{
+      flex:1;
+      padding: 16px;
+      overflow:auto;
+    }
+
+    .message{
+      max-width: 78%;
+      margin: 10px 0;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      white-space: pre-wrap;
+      line-height:1.35;
+      animation: fadeIn .14s ease-out;
+    }
+    @keyframes fadeIn{
+      from { opacity:0; transform: translateY(4px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    .user{
+      margin-left:auto;
+      background: linear-gradient(135deg, rgba(79,140,255,.28), rgba(45,107,255,.18));
+      border-color: rgba(79,140,255,.30);
+    }
+
+    .bot{
+      margin-right:auto;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .meta{
+      margin-top:6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chat-input{
+      border-top: 1px solid var(--border);
+      padding: 12px;
+      background: rgba(0,0,0,0.12);
+    }
+
+    .quick{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .chip{
+      font-size: 13px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      cursor:pointer;
+    }
+    .chip:hover{ background: rgba(255,255,255,0.12); }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .chat-input input{
+      flex:1;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-size: 15px;
+      outline:none;
+    }
+
+    .chat-input button{
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(79,140,255,.45);
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .chat-input button:hover{ filter: brightness(1.05); }
+
+    .typing{
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .typing span{
+      width:7px;height:7px;border-radius:50%;
+      background: rgba(255,255,255,0.55);
+      animation: bounce 1s infinite;
+    }
+    .typing span:nth-child(2){ animation-delay:.15s; }
+    .typing span:nth-child(3){ animation-delay:.30s; }
+    @keyframes bounce{
+      0%, 80%, 100% { transform: translateY(0); opacity:.55; }
+      40% { transform: translateY(-4px); opacity:1; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="title">🤖 Reclutin <small>| Agente Reclutador</small></div>
+
+      <div class="status">
+        <span id="dot" class="dot off"></span>
+        <span id="statusText">Desconectado</span>
+      </div>
+
+      <div class="actions">
+        <button id="btnClear">🧹 Limpiar</button>
+        <button id="btnRetry">🔁 Reintentar</button>
+      </div>
+    </div>
+
+    <div id="messages" class="chat-messages"></div>
+
+    <div class="chat-input">
+      <div class="quick">
+        <button class="chip" data-q="Necesito 3 CONTADOR AUDITOR, dame los nombres">3 Contador Auditor</button>
+        <button class="chip" data-q="Busca 5 Analista BI en Santiago">5 Analista BI</button>
+        <button class="chip" data-q="Filtra por Power BI y +3 años de experiencia">Power BI +3 años</button>
+        <button class="chip" data-q="Dame candidatos remotos disponibles inmediata">Remoto inmediato</button>
+      </div>
+
+      <div class="row">
+        <input id="input" type="text" placeholder="Escribe tu consulta…" />
+        <button id="btnSend">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const API_BASE = "http://127.0.0.1:8000";
+  let sessionId = null;
+
+  const messagesDiv = document.getElementById("messages");
+  const input = document.getElementById("input");
+  const dot = document.getElementById("dot");
+  const statusText = document.getElementById("statusText");
+
+  const btnSend = document.getElementById("btnSend");
+  const btnClear = document.getElementById("btnClear");
+  const btnRetry = document.getElementById("btnRetry");
+
+  const LOCAL_GREETING =
+`Hola 👋
+Soy Reclutin, tu agente virtual de apoyo en Reclutamiento y Análisis de Personas.
+
+Puedo ayudarte a:
+- Buscar trabajadores en la base
+- Filtrar por experiencia, cargos, gerencia o formación
+- Analizar perfiles de manera conversacional
+
+¿En qué te puedo ayudar hoy?`;
+
+  function setStatus(online){
+    dot.className = online ? "dot" : "dot off";
+    statusText.textContent = online ? "Conectado" : "Desconectado";
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
+  function ts(){
+    return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+
+  function addMessage(text, sender) {
+    const wrap = document.createElement("div");
+    wrap.className = `message ${sender}`;
+    wrap.innerHTML = `<div>${escapeHtml(text)}</div><div class="meta">${ts()}</div>`;
+    messagesDiv.appendChild(wrap);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  function addTyping(){
+    const wrap = document.createElement("div");
+    wrap.className = "message bot";
+    wrap.innerHTML = `<div class="typing"><span></span><span></span><span></span></div><div class="meta">${ts()}</div>`;
+    messagesDiv.appendChild(wrap);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // ✅ Saludo SOLO UI (NO consulta al backend)
+  function initGreetingUI() {
+    addMessage(LOCAL_GREETING, "bot");
+    setStatus(false);
+  }
+
+  // ✅ Crea sesión SOLO cuando el usuario haga su primera consulta real
+  async function ensureSession() {
+    if (sessionId) return true;
+
+    // mostramos typing mientras conectamos
+    addTyping();
+
+    try {
+      // IMPORTANTE:
+      // Usamos /chat para generar session_id y opcionalmente saludo.
+      // Mandamos una señal que NO debería provocar búsqueda en tu backend idealmente.
+      // Si tu backend hoy busca con "hola", igual funcionará como conexión,
+      // pero para evitar búsqueda, lo mejor es que el backend trate "inicio/hola" como greeting.
+      const response = await fetch(`${API_BASE}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({ question: "hola", include_rows: false })
+      });
+
+      const data = await response.json();
+      sessionId = data.session_id || sessionId;
+
+      // reemplaza el typing por un mensaje de estado (no duplicamos el saludo local)
+      messagesDiv.lastChild.querySelector("div").innerHTML =
+        escapeHtml("✅ Conectado. Ya puedes preguntar.");
+      setStatus(true);
+      return true;
+
+    } catch (err) {
+      setStatus(false);
+      messagesDiv.lastChild.querySelector("div").innerHTML =
+        "❌ No pude conectar con el servidor. Revisa Uvicorn (127.0.0.1:8000).";
+      return false;
+    }
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    // crea sesión si es primera vez
+    const ok = await ensureSession();
+    if (!ok) return;
+
+    addMessage(text, "user");
+    input.value = "";
+    addTyping();
+
+    try {
+      const response = await fetch(`${API_BASE}/chat_text`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({ question: text, session_id: sessionId })
+      });
+
+      const answer = await response.text();
+      messagesDiv.lastChild.querySelector("div").innerHTML = escapeHtml(answer);
+      setStatus(true);
+
+    } catch (err) {
+      setStatus(false);
+      messagesDiv.lastChild.querySelector("div").innerHTML =
+        "❌ Error conectando con el servidor.";
+    }
+  }
+
+  // Events
+  btnSend.addEventListener("click", sendMessage);
+  input.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+
+  btnRetry.addEventListener("click", async () => {
+    // reintenta conexión, sin limpiar mensajes
+    await ensureSession();
+  });
+
+  btnClear.addEventListener("click", () => {
+    messagesDiv.innerHTML = "";
+    sessionId = null;
+    initGreetingUI();
+  });
+
+  document.querySelectorAll(".chip").forEach(b => {
+    b.addEventListener("click", async () => {
+      input.value = b.dataset.q || "";
+      await sendMessage();
+    });
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    initGreetingUI();
+  });
+</script>
+</body>
+</html>
