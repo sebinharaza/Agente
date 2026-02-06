@@ -245,3 +245,30 @@ La respuesta incluye:
 - answer (texto generado)
 - query_spec (cómo se resolvió)
 - strategy (structured / semantic / fallback)
+
+## Para levantar la UI:
+
+1️⃣ Mantener backend corriendo:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+2️⃣ En otra terminal:
+
+```bash
+cd ui
+python -m http.server 5500
+```
+
+3️⃣ Abrir navegador:
+
+```
+http://127.0.0.1:5500
+```
+
+La UI se conecta automáticamente al backend en:
+
+```
+http://127.0.0.1:8000
+```
