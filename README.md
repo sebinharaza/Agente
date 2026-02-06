@@ -14,8 +14,7 @@ reutilizables, embeddings y persistencia en SQLite.
 Permitir consultas en lenguaje natural sobre una base de trabajadores, por ejemplo:
 
 - “Dame 3 analistas de sistemas”
-- “Personas con más de 5 años en el cargo”
-- “Trabajadores relacionados con auditoría”
+- “Necesito el Nombre del Rut X”
 - “Consulta directa vía SQL a la base local”
 
 ---
