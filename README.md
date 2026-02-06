@@ -51,7 +51,7 @@ Agente/
 ├── ui/                         # Interfaz HTML simple (opcional)
 ├── index_files/                # Archivos estáticos
 │
-├── trabajadores.xlsx           # Fuente de datos base
+├── trabajadores.xlsx           # Fuente de datos base/se adjunta base ejemplo el cual debe llamarse así
 ├── .env.example                # Variables de entorno de ejemplo
 ├── .gitignore
 └── README.md
@@ -101,7 +101,7 @@ Crear un archivo `.env` a partir de `.env.example`:
 
 ```env
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
-EXCEL_PATH=trabajadores.xlsx
+EXCEL_PATH=trabajadores_demo.xlsx
 SQLITE_PATH=app/storage/trabajadores.db
 SQLITE_TABLE=trabajadores
 ```
