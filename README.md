@@ -224,7 +224,24 @@ Esto permite modificar el comportamiento del agente sin cambiar el código.
 
 ---
 
-## 👤 Autor
+## 👤 Autores
 
 Proyecto desarrollado por **Jonathan Salinas - Sebastián Leiva **  
 Curso: *Prompt Engineering / IA Generativa aplicada*
+
+## Punto 2 – Modelo LLM API-Based
+
+El endpoint POST /chat utiliza el modelo gpt-4o-mini vía OpenAI API.
+
+Flujo:
+1. Usuario envía pregunta en lenguaje natural.
+2. El sistema construye un prompt dinámico.
+3. Se llama a OpenAI Chat Completions.
+4. El modelo devuelve un JSON estructurado (query_spec).
+5. El sistema ejecuta la estrategia correspondiente (structured / semantic / fallback).
+6. Se responde al usuario.
+
+La respuesta incluye:
+- answer (texto generado)
+- query_spec (cómo se resolvió)
+- strategy (structured / semantic / fallback)
